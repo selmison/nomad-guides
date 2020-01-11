@@ -15,6 +15,11 @@ NOMADDOWNLOAD=https://releases.hashicorp.com/nomad/${NOMADVERSION}/nomad_${NOMAD
 NOMADCONFIGDIR=/etc/nomad.d
 NOMADDIR=/opt/nomad
 
+CNIPLUGINSVERSION=0.8.4
+CNIPLUGINSDOWNLOAD=https://github.com/containernetworking/plugins/releases/download/v${CNIPLUGINSVERSION}/cni-plugins-linux-amd64-v${CNIPLUGINSVERSION}.tgz
+CNIPLUGINSDIR=/opt/cni
+
+
 # Dependencies
 sudo apt-get install -y software-properties-common
 sudo apt-get update
@@ -62,3 +67,18 @@ sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubun
 sudo apt-get update
 sudo apt-get install -y docker-ce=17.09.1~ce-0~ubuntu
 sudo usermod -aG docker ubuntu
+
+# Download CNI Plugins
+curl -L $CNIPLUGINSDOWNLOAD > cni-plugins.tgz
+
+## Install CNI Plugins
+sudo mkdir -p $CNIPLUGINSDIR/bin
+sudo tar -C $CNIPLUGINSDIR/bin -xzf cni-plugins.tgz
+
+## Configure CNI Plugins
+sudo tee /etc/sysctl.d/60-configure-cni-plugins.conf > /dev/null <<EOF
+net.bridge.bridge-nf-call-arptables = 1
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-iptables = 1
+EOF
+sudo sysctl --system
