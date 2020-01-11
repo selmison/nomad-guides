@@ -9,5 +9,11 @@
   "bootstrap_expect": SERVER_COUNT,
   "service": {
     "name": "consul"
+  },
+  "ports": {
+    "grpc": 8502
+  },
+  "connect": {
+     "enabled": true
   }
 }
