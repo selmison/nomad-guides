@@ -32,7 +32,6 @@ job "sockshopui" {
         command = "/usr/local/bin/node"
         args = ["server.js", "--domain=service.consul"]
         hostname = "front-end.service.consul"
-        network_mode = "sockshop"
         port_map = {
           http = 8079
         }
