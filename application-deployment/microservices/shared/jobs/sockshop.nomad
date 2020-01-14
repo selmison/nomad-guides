@@ -22,6 +22,10 @@ job "sockshop" {
       mode = "delay"
     }
 
+    network {
+      mode = "bridge"
+    }
+
     # - app - #
     task "user" {
       driver = "docker"
@@ -54,6 +58,9 @@ job "sockshop" {
         name = "user"
         tags = ["app", "user"]
         port = "http"
+        connect { // To start an Envoy proxy sidecar for allowing incoming connections via Consul Connect.
+          sidecar_service {}
+        }
       }
 
       resources {
@@ -94,6 +101,9 @@ job "sockshop" {
         name = "user-db"
         tags = ["db", "user", "user-db"]
         port = "http"
+        connect { // To start an Envoy proxy sidecar for allowing incoming connections via Consul Connect.
+          sidecar_service {}
+        }
       }
 
       resources {
@@ -118,6 +128,10 @@ job "sockshop" {
       mode = "delay"
     }
 
+    network {
+      mode = "bridge"
+    }
+
     # - app - #
     task "catalogue" {
       driver = "docker"
@@ -134,6 +148,9 @@ job "sockshop" {
         name = "catalogue"
         tags = ["app", "catalogue"]
         port = "http"
+        connect { // To start an Envoy proxy sidecar for allowing incoming connections via Consul Connect.
+          sidecar_service {}
+        }
       }
 
       resources {
@@ -179,6 +196,9 @@ job "sockshop" {
         name = "catalogue-db"
         tags = ["db", "catalogue", "catalogue-db"]
         port = "http"
+        connect { // To start an Envoy proxy sidecar for allowing incoming connections via Consul Connect.
+          sidecar_service {}
+        }
       }
 
       resources {
@@ -204,6 +224,10 @@ job "sockshop" {
       mode = "delay"
     }
 
+    network {
+      mode = "bridge"
+    }
+
     # - app - #
     task "carts" {
       driver = "docker"
@@ -224,6 +248,9 @@ job "sockshop" {
         name = "carts"
         tags = ["app", "carts"]
         port = "http"
+        connect { // To start an Envoy proxy sidecar for allowing incoming connections via Consul Connect.
+          sidecar_service {}
+        }
       }
 
       resources {
@@ -252,6 +279,9 @@ job "sockshop" {
         name = "carts-db"
         tags = ["db", "carts", "carts-db"]
         port = "http"
+        connect { // To start an Envoy proxy sidecar for allowing incoming connections via Consul Connect.
+          sidecar_service {}
+        }
       }
 
       resources {
@@ -276,6 +306,10 @@ job "sockshop" {
       mode = "delay"
     }
 
+    network {
+      mode = "bridge"
+    }
+
     # - app - #
     task "orders" {
       driver = "docker"
@@ -297,6 +331,9 @@ job "sockshop" {
         name = "orders"
         tags = ["app", "orders"]
         port = "http"
+        connect { // To start an Envoy proxy sidecar for allowing incoming connections via Consul Connect.
+          sidecar_service {}
+        }
       }
 
       resources {
@@ -325,6 +362,9 @@ job "sockshop" {
         name = "orders-db"
         tags = ["db", "orders", "orders-db"]
         port = "http"
+        connect { // To start an Envoy proxy sidecar for allowing incoming connections via Consul Connect.
+          sidecar_service {}
+        }
       }
 
       resources {
@@ -349,6 +389,10 @@ job "sockshop" {
       mode = "delay"
     }
 
+    network {
+      mode = "bridge"
+    }
+
     # - app - #
     task "payment" {
       driver = "docker"
@@ -365,6 +409,9 @@ job "sockshop" {
         name = "payment"
         tags = ["app", "payment"]
         port = "http"
+        connect { // To start an Envoy proxy sidecar for allowing incoming connections via Consul Connect.
+          sidecar_service {}
+        }
       }
 
       resources {
@@ -389,6 +436,10 @@ job "sockshop" {
       mode = "delay"
     }
 
+    network {
+      mode = "bridge"
+    }
+
     # - rabbitmq - #
     task "rabbitmq" {
       driver = "docker"
@@ -401,6 +452,9 @@ job "sockshop" {
       service {
         name = "rabbitmq"
         tags = ["message-broker", "rabbitmq"]
+        connect { // To start an Envoy proxy sidecar for allowing incoming connections via Consul Connect.
+          sidecar_service {}
+        }
       }
 
       resources {
@@ -435,6 +489,9 @@ job "sockshop" {
         name = "shipping"
         tags = ["app", "shipping"]
         port = "http"
+        connect { // To start an Envoy proxy sidecar for allowing incoming connections via Consul Connect.
+          sidecar_service {}
+        }
       }
 
       resources {
@@ -465,6 +522,9 @@ job "sockshop" {
       service {
         name = "queue-master"
         tags = ["app", "queue-master"]
+        connect { // To start an Envoy proxy sidecar for allowing incoming connections via Consul Connect.
+          sidecar_service {}
+        }
       }
 
       resources {
