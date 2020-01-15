@@ -522,9 +522,6 @@ job "sockshop" {
       service {
         name = "queue-master"
         tags = ["app", "queue-master"]
-        connect { // To start an Envoy proxy sidecar for allowing incoming connections via Consul Connect.
-          sidecar_service {}
-        }
       }
 
       resources {
