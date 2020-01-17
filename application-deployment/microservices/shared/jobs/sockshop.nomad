@@ -24,16 +24,18 @@ job "sockshop" {
 
     network {
       mode = "bridge"
+      port "port-user" {}
+      port "port-user-db" {}
     }
 
     service {
       name = "user"
       tags = ["app", "user"]
-      port = "http"
+      port = "port-user"
       connect { // To start an Envoy proxy sidecar for allowing incoming connections via Consul Connect.
         sidecar_service {}
       }
-    }    
+    }   
 
     # - app - #
     task "user" {
@@ -47,7 +49,7 @@ job "sockshop" {
         image = "weaveworksdemos/user:master-5e88df65"
         hostname = "user.service.consul"
         port_map = {
-          http = 80
+          port-user = 80
         }
       }
 
@@ -66,10 +68,6 @@ job "sockshop" {
       resources {
         cpu = 100 # 100 Mhz
         memory = 256 # 256MB
-        network {
-          mbits = 10
-          port "http" {}
-        }
       }
     } # - end app - #
 
@@ -81,7 +79,7 @@ job "sockshop" {
         image = "weaveworksdemos/user-db:master-5e88df65"
         hostname = "user-db.service.consul"
         port_map = {
-          http = 27017
+          port-user-db = 27017
         }
       }
 
@@ -100,16 +98,12 @@ job "sockshop" {
       service {
         name = "user-db"
         tags = ["db", "user", "user-db"]
-        port = "http"
+        port = "port-user-db"
       }
 
       resources {
         cpu = 100 # 100 Mhz
         memory = 96 # 96MB
-        network {
-          mbits = 10
-	        port "http" {}
-        }
       }
     } # - end db - #
   } # - end user - #
