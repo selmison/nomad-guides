@@ -1,4 +1,4 @@
-job "sockshop" {
+job "sockshop-original" {
   datacenters = ["dc1"]
 
   constraint {
@@ -33,7 +33,6 @@ job "sockshop" {
       config {
         image = "weaveworksdemos/user:master-5e88df65"
         hostname = "user.service.consul"
-        network_mode = "sockshop"
         port_map = {
           http = 80
         }
@@ -74,7 +73,6 @@ job "sockshop" {
       config {
         image = "weaveworksdemos/user-db:master-5e88df65"
         hostname = "user-db.service.consul"
-        network_mode = "sockshop"
         port_map = {
           http = 27017
         }
@@ -127,7 +125,6 @@ job "sockshop" {
       config {
         image = "weaveworksdemos/catalogue:0.3.5"
         hostname = "catalogue.service.consul"
-        network_mode = "sockshop"
         port_map = {
           http = 80
         }
@@ -156,7 +153,6 @@ job "sockshop" {
       config {
         image = "weaveworksdemos/catalogue-db:0.3.5"
         hostname = "catalogue-db.service.consul"
-        network_mode = "sockshop"
         port_map = {
           http = 3306
         }
@@ -219,7 +215,6 @@ job "sockshop" {
       config {
         image = "weaveworksdemos/carts:0.4.8"
         hostname = "carts.service.consul"
-        network_mode = "sockshop"
         port_map = {
           http = 80
         }
@@ -248,7 +243,6 @@ job "sockshop" {
       config {
         image = "mongo:3.4.3"
         hostname = "carts-db.service.consul"
-        network_mode = "sockshop"
         port_map = {
           http = 27017
         }
@@ -294,7 +288,6 @@ job "sockshop" {
       config {
         image = "weaveworksdemos/orders:0.4.7"
         hostname = "orders.service.consul"
-        network_mode = "sockshop"
         port_map = {
           http = 80
         }
@@ -323,7 +316,6 @@ job "sockshop" {
       config {
         image = "mongo:3.4.3"
         hostname = "orders-db.service.consul"
-        network_mode = "sockshop"
 	      port_map = {
 	         http = 27017
 	      }
@@ -364,7 +356,6 @@ job "sockshop" {
       config {
         image = "weaveworksdemos/payment:0.4.3"
         hostname = "payment"
-        network_mode = "sockshop"
         port_map = {
           http = 80
         }
@@ -405,7 +396,6 @@ job "sockshop" {
       config {
         image = "rabbitmq:3.6.8"
         hostname = "rabbitmq.service.consul"
-        network_mode = "sockshop"
       }
 
       service {
@@ -436,7 +426,6 @@ job "sockshop" {
       config {
         image = "weaveworksdemos/shipping:0.4.8"
         hostname = "shipping.service.consul"
-        network_mode = "sockshop"
         port_map = {
           http = 80
         }
