@@ -116,7 +116,7 @@ job "sockshop" {
     service {
       name = "catalogue"
       tags = ["app", "catalogue"]
-      port = "http"
+      port = "80"
       connect { // To start an Envoy proxy sidecar for allowing incoming connections via Consul Connect.
         sidecar_service {}
       }
@@ -128,19 +128,11 @@ job "sockshop" {
 
       config {
         image = "weaveworksdemos/catalogue:0.3.5"
-        hostname = "catalogue.service.consul"
-        port_map = {
-          http = 80
-        }
       }
 
       resources {
         cpu = 100 # 100 Mhz
         memory = 128 # 32MB
-        network {
-          mbits = 10
-          port "http" {}
-        }
       }
     } # - end app - #
 
@@ -150,10 +142,6 @@ job "sockshop" {
 
       config {
         image = "weaveworksdemos/catalogue-db:0.3.5"
-        hostname = "catalogue-db.service.consul"
-        port_map = {
-          http = 3306
-        }
       }
 
       vault {
@@ -176,16 +164,11 @@ job "sockshop" {
       service {
         name = "catalogue-db"
         tags = ["db", "catalogue", "catalogue-db"]
-        port = "http"
       }
 
       resources {
         cpu = 100 # 100 Mhz
         memory = 256 # 256MB
-        network {
-          mbits = 10
-	        port "http" {}
-        }
       }
 
     } # - end db - #
@@ -209,7 +192,7 @@ job "sockshop" {
     service {
       name = "carts"
       tags = ["app", "carts"]
-      port = "http"
+      port = "80"
       connect { // To start an Envoy proxy sidecar for allowing incoming connections via Consul Connect.
         sidecar_service {}
       }
@@ -226,18 +209,11 @@ job "sockshop" {
       config {
         image = "weaveworksdemos/carts:0.4.8"
         hostname = "carts.service.consul"
-        port_map = {
-          http = 80
-        }
       }
 
       resources {
         cpu = 100 # 100 Mhz
         memory = 1024 # 1024MB
-        network {
-          mbits = 10
-          port "http" {}
-        }
       }
     } # - end app - #
 
@@ -248,24 +224,16 @@ job "sockshop" {
       config {
         image = "mongo:3.4.3"
         hostname = "carts-db.service.consul"
-        port_map = {
-          http = 27017
-        }
       }
 
       service {
         name = "carts-db"
         tags = ["db", "carts", "carts-db"]
-        port = "http"
       }
 
       resources {
         cpu = 100 # 100 Mhz
         memory = 128 # 128MB
-        network {
-          mbits = 10
-	        port "http" {}
-        }
       }
     } # - end db - #
   } # - end carts - #
@@ -288,7 +256,7 @@ job "sockshop" {
     service {
       name = "orders"
       tags = ["app", "orders"]
-      port = "http"
+      port = "80"
       connect { // To start an Envoy proxy sidecar for allowing incoming connections via Consul Connect.
         sidecar_service {}
       }
@@ -306,18 +274,11 @@ job "sockshop" {
       config {
         image = "weaveworksdemos/orders:0.4.7"
         hostname = "orders.service.consul"
-        port_map = {
-          http = 80
-        }
       }
 
       resources {
         cpu = 100 # 100 Mhz
         memory = 1024 # 1024MB
-        network {
-          mbits = 10
-          port "http" {}
-        }
       }
     } # - end app - #
 
@@ -328,24 +289,15 @@ job "sockshop" {
       config {
         image = "mongo:3.4.3"
         hostname = "orders-db.service.consul"
-	      port_map = {
-	         http = 27017
-	      }
       }
 
       service {
         name = "orders-db"
-        tags = ["db", "orders", "orders-db"]
-        port = "http"
-      }
+        tags = ["db", "orders", "orders-db"]      }
 
       resources {
         cpu = 100 # 100 Mhz
         memory = 64 # 64MB
-        network {
-          mbits = 10
-	        port "http" {}
-        }
       }
     } # - end db - #
   } # - end orders - #
@@ -368,7 +320,7 @@ job "sockshop" {
     service {
       name = "payment"
       tags = ["app", "payment"]
-      port = "http"
+      port = "80"
       connect { // To start an Envoy proxy sidecar for allowing incoming connections via Consul Connect.
         sidecar_service {}
       }
@@ -380,19 +332,11 @@ job "sockshop" {
 
       config {
         image = "weaveworksdemos/payment:0.4.3"
-        hostname = "payment"
-        port_map = {
-          http = 80
-        }
       }
 
       resources {
         cpu = 100 # 100 Mhz
         memory = 16 # 16MB
-        network {
-          mbits = 10
-          port "http" {}
-        }
       }
     } # - end app - #
   } # - end payment - #
@@ -415,7 +359,7 @@ job "sockshop" {
     service {
       name = "shipping"
       tags = ["app", "shipping"]
-      port = "http"
+      port = "80"
       connect { // To start an Envoy proxy sidecar for allowing incoming connections via Consul Connect.
         sidecar_service {}
       }
@@ -427,7 +371,6 @@ job "sockshop" {
 
       config {
         image = "rabbitmq:3.6.8"
-        hostname = "rabbitmq.service.consul"
       }
 
       service {
@@ -438,12 +381,6 @@ job "sockshop" {
       resources {
         cpu = 100 # 100 Mhz
         memory = 160 # 160MB
-        network {
-          mbits = 10
-	        port "http" {
-            static = 5672
-          }
-        }
       }
     } # - end rabbitmq - #
 
@@ -457,19 +394,11 @@ job "sockshop" {
 
       config {
         image = "weaveworksdemos/shipping:0.4.8"
-        hostname = "shipping.service.consul"
-        port_map = {
-          http = 80
-        }
       }
 
       resources {
         cpu = 100 # 100 Mhz
         memory = 1024 # 1024MB
-        network {
-          mbits = 10
-          port "http" {}
-        }
       }
     } # - end shipping - #
 
@@ -496,11 +425,6 @@ job "sockshop" {
       resources {
         cpu = 100 # 100 Mhz
         memory = 1024 # 1024MB
-        network {
-          mbits = 10
-          port "http" {
-            static = "8099"
-          }
         }
       }
     } # - end queue-master - #
