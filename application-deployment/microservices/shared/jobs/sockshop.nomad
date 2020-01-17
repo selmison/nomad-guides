@@ -208,7 +208,6 @@ job "sockshop" {
 
       config {
         image = "weaveworksdemos/carts:0.4.8"
-        hostname = "carts.service.consul"
       }
 
       resources {
@@ -223,7 +222,6 @@ job "sockshop" {
 
       config {
         image = "mongo:3.4.3"
-        hostname = "carts-db.service.consul"
       }
 
       service {
@@ -273,7 +271,6 @@ job "sockshop" {
 
       config {
         image = "weaveworksdemos/orders:0.4.7"
-        hostname = "orders.service.consul"
       }
 
       resources {
@@ -288,7 +285,6 @@ job "sockshop" {
 
       config {
         image = "mongo:3.4.3"
-        hostname = "orders-db.service.consul"
       }
 
       service {
