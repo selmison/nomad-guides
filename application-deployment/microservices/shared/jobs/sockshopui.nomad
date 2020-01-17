@@ -37,10 +37,9 @@ job "sockshopui" {
       driver = "docker"
 
       config {
-        image = "weaveworksdemos/front-end:master-ac9ca707"
+        image = "selmison/nomad-frontend:latest"
         command = "/usr/local/bin/node"
         args = ["server.js", "--domain=service.consul"]
-        hostname = "front-end.service.consul"
         port_map = {
           http = 8079
         }
@@ -55,23 +54,23 @@ job "sockshopui" {
             proxy {
               upstreams { //Maging upstream services that a Consul Connect proxy routes to
                 destination_name = "user"
-                local_bind_port  = 18080
+                local_bind_port  = 28080
               }
               upstreams { //Maging upstream services that a Consul Connect proxy routes to
                 destination_name = "catalogue"
-                local_bind_port  = 18081
+                local_bind_port  = 28081
               }
               upstreams { //Maging upstream services that a Consul Connect proxy routes to
                 destination_name = "carts"
-                local_bind_port  = 18082
+                local_bind_port  = 28082
               }
               upstreams { //Maging upstream services that a Consul Connect proxy routes to
                 destination_name = "orders"
-                local_bind_port  = 18083
+                local_bind_port  = 28083
               }
               upstreams { //Maging upstream services that a Consul Connect proxy routes to
                 destination_name = "payment"
-                local_bind_port  = 18084
+                local_bind_port  = 28084
               }
             }
           }
