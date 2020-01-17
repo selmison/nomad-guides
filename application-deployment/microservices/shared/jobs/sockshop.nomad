@@ -425,7 +425,6 @@ job "sockshop" {
       resources {
         cpu = 100 # 100 Mhz
         memory = 1024 # 1024MB
-        }
       }
     } # - end queue-master - #
 
