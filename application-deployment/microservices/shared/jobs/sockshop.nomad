@@ -90,6 +90,7 @@ job "sockshop" {
       service {
         name = "user-db"
         tags = ["db", "user", "user-db"]
+        address_mode = "driver"
       }
 
       resources {
