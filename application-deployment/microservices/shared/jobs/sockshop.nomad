@@ -42,6 +42,7 @@ job "sockshop" {
 
       env {
 	      HATEAOS = "user.service.consul"
+        MONGO_HOST = "user-db.service.consul:27017"
       }
 
       config {
@@ -62,7 +63,7 @@ job "sockshop" {
 
       resources {
         cpu = 100 # 100 Mhz
-        memory = 256 # 256MB
+        memory = 128 # 256MB
       }
     } # - end app - #
 
@@ -132,7 +133,7 @@ job "sockshop" {
 
       resources {
         cpu = 100 # 100 Mhz
-        memory = 128 # 32MB
+        memory = 32 # 32MB
       }
     } # - end app - #
 
@@ -212,7 +213,7 @@ job "sockshop" {
 
       resources {
         cpu = 100 # 100 Mhz
-        memory = 1024 # 1024MB
+        memory = 256 # 1024MB
       }
     } # - end app - #
 
@@ -275,7 +276,7 @@ job "sockshop" {
 
       resources {
         cpu = 100 # 100 Mhz
-        memory = 1024 # 1024MB
+        memory = 256 # 1024MB
       }
     } # - end app - #
 
@@ -289,7 +290,8 @@ job "sockshop" {
 
       service {
         name = "orders-db"
-        tags = ["db", "orders", "orders-db"]      }
+        tags = ["db", "orders", "orders-db"]      
+      }
 
       resources {
         cpu = 100 # 100 Mhz
@@ -394,7 +396,7 @@ job "sockshop" {
 
       resources {
         cpu = 100 # 100 Mhz
-        memory = 1024 # 1024MB
+        memory = 256 # 1024MB
       }
     } # - end shipping - #
 
@@ -420,7 +422,7 @@ job "sockshop" {
 
       resources {
         cpu = 100 # 100 Mhz
-        memory = 1024 # 1024MB
+        memory = 256 # 1024MB
       }
     } # - end queue-master - #
 
