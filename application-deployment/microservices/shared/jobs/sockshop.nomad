@@ -32,7 +32,13 @@ job "sockshop" {
       port = "80"
 
       connect { // To start an Envoy proxy sidecar for allowing incoming connections via Consul Connect.
-        sidecar_service {}
+        sidecar_service {
+          proxy {
+            upstreams { //Maging upstream services that a Consul Connect proxy routes to
+              destination_name = "user-db"
+              local_bind_port  = 27017
+            }
+
       }
     }   
 
@@ -42,7 +48,7 @@ job "sockshop" {
 
       env {
 	      HATEAOS = "user.service.consul"
-        MONGO_HOST = "user-db.service.consul:27017"
+        MONGO_HOST = "${NOMAD_UPSTREAM_ADDR_user_db}"
       }
 
       config {
@@ -66,6 +72,31 @@ job "sockshop" {
         memory = 128 # 256MB
       }
     } # - end app - #
+  } # - end user - #
+  
+  group "user-db" {
+   count = 1
+
+    restart {
+      attempts = 10
+      interval = "5m"
+      delay = "25s"
+      mode = "delay"
+    }
+
+    network {
+      mode = "bridge"
+    }
+
+    service {
+      name = "user-db"
+      tags = ["db", "user", "user-db"]
+      port = "27017"
+
+      connect { // To start an Envoy proxy sidecar for allowing incoming connections via Consul Connect.
+        sidecar_service {}
+      }
+    }
 
     # - db - #
     task "user-db" {
@@ -85,12 +116,6 @@ job "sockshop" {
         EOH
         destination = "secrets/user_db.env"
         env = true
-      }
-
-      service {
-        name = "user-db"
-        tags = ["db", "user", "user-db"]
-        address_mode = "driver"
       }
 
       resources {
