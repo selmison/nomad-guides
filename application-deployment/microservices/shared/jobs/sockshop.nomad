@@ -42,7 +42,7 @@ job "sockshop" {
 
       env {
 	      HATEAOS = "user.service.consul"
-        MONGO_HOST = "user-db.service.consul:27017"
+        MONGO_HOST = "user-db.service.consul:27018"
       }
 
       config {
@@ -113,7 +113,7 @@ job "sockshop" {
         memory = 96 # 96MB
         network {
           port "user_db_port" {
-            static = 27017
+            static = 27018
           }
         }
       }
@@ -260,24 +260,6 @@ job "sockshop" {
       }
     } # - end app - #
 
-    # - db - #
-    task "cartdb" {
-      driver = "docker"
-
-      config {
-        image = "mongo:3.4.3"
-      }
-
-      service {
-        name = "carts-db"
-        tags = ["db", "carts", "carts-db"]
-      }
-
-      resources {
-        cpu = 100 # 100 Mhz
-        memory = 128 # 128MB
-      }
-    } # - end db - #
   } # - end carts - #
 
   # - carts-db - #
@@ -314,7 +296,7 @@ job "sockshop" {
         memory = 128 # 128MB
         network {
           port "carts_db_port" {
-            static = 27018
+            static = 27017
           }
         }
       }
@@ -352,6 +334,7 @@ job "sockshop" {
       env {
         db = "orders-db.service.consul"
 	      domain = "service.consul"
+        MONGO_ENDPOINT = "orders-db.service.consul:27019/data"
       }
 
       config {
@@ -364,24 +347,6 @@ job "sockshop" {
       }
     } # - end app - #
 
-    # - db - #
-    task "ordersdb" {
-      driver = "docker"
-
-      config {
-        image = "mongo:3.4.3"
-      }
-
-      service {
-        name = "orders-db"
-        tags = ["db", "orders", "orders-db"]      
-      }
-
-      resources {
-        cpu = 100 # 100 Mhz
-        memory = 64 # 64MB
-      }
-    } # - end db - #
   } # - end orders - #
 
  # - orders-db - #
