@@ -32,15 +32,9 @@ job "sockshop" {
       port = "80"
 
       connect { // To start an Envoy proxy sidecar for allowing incoming connections via Consul Connect.
-        sidecar_service {
-          proxy {
-            upstreams { //Maging upstream services that a Consul Connect proxy routes to
-              destination_name = "user-db"
-              local_bind_port  = 27017
-            }
-
+        sidecar_service {}
       }
-    }   
+    }  
 
     # - app - #
     task "user" {
@@ -48,7 +42,7 @@ job "sockshop" {
 
       env {
 	      HATEAOS = "user.service.consul"
-        MONGO_HOST = "${NOMAD_UPSTREAM_ADDR_user_db}"
+        MONGO_HOST = "user-db.service.consul:27017"
       }
 
       config {
@@ -74,6 +68,7 @@ job "sockshop" {
     } # - end app - #
   } # - end user - #
   
+  # - user-db - #
   group "user-db" {
    count = 1
 
@@ -84,26 +79,15 @@ job "sockshop" {
       mode = "delay"
     }
 
-    network {
-      mode = "bridge"
-    }
-
-    service {
-      name = "user-db"
-      tags = ["db", "user", "user-db"]
-      port = "27017"
-
-      connect { // To start an Envoy proxy sidecar for allowing incoming connections via Consul Connect.
-        sidecar_service {}
-      }
-    }
-
     # - db - #
     task "user-db" {
       driver = "docker"
 
       config {
         image = "weaveworksdemos/user-db:master-5e88df65"
+        port_map {
+          user_db_port = 27017
+        }
       }
 
       vault {
@@ -118,12 +102,23 @@ job "sockshop" {
         env = true
       }
 
+      service {
+        name = "user-db"
+        tags = ["db", "user", "user-db"]
+        port = "user_db_port"
+      }
+
       resources {
         cpu = 100 # 100 Mhz
         memory = 96 # 96MB
+        network {
+          port "user_db_port" {
+            static = 27017
+          }
+        }
       }
     } # - end db - #
-  } # - end user - #
+  } # - end user-db - #
 
   # - catalogue - #
   group "catalogue" {
@@ -155,6 +150,7 @@ job "sockshop" {
 
       config {
         image = "weaveworksdemos/catalogue:0.3.5"
+        dns_search_domains = ["service.consul"]
       }
 
       resources {
@@ -162,6 +158,18 @@ job "sockshop" {
         memory = 32 # 32MB
       }
     } # - end app - #
+  } # - end catalogue - #
+
+  # - catalogue-db - #
+  group "catalogue-db" {
+    count = 1
+
+    restart {
+      attempts = 10
+      interval = "5m"
+      delay = "25s"
+      mode = "delay"
+    }
 
     # - db - #
     task "cataloguedb" {
@@ -169,6 +177,9 @@ job "sockshop" {
 
       config {
         image = "weaveworksdemos/catalogue-db:0.3.5"
+        port_map = {
+          catalogue_db_port = 3306
+        }
       }
 
       vault {
@@ -191,15 +202,21 @@ job "sockshop" {
       service {
         name = "catalogue-db"
         tags = ["db", "catalogue", "catalogue-db"]
+        port = "catalogue_db_port"
       }
 
       resources {
         cpu = 100 # 100 Mhz
         memory = 256 # 256MB
+        network {
+          port "catalogue_db_port" {
+            static = 3306
+          }
+        }
       }
 
     } # - end db - #
-  } # - end catalogue - #
+  } # - end catalogue-db - #
 
   # - carts - #
   group "carts" {
@@ -263,6 +280,47 @@ job "sockshop" {
     } # - end db - #
   } # - end carts - #
 
+  # - carts-db - #
+  group "carts-db" {
+    count = 1
+
+    restart {
+      attempts = 10
+      interval = "5m"
+      delay = "25s"
+      mode = "delay"
+    }
+
+
+    # - db - #
+    task "cartdb" {
+      driver = "docker"
+
+      config {
+        image = "mongo:3.4.3"
+        port_map = {
+          carts_db_port = 27017
+        }
+      }
+
+      service {
+        name = "carts-db"
+        tags = ["db", "carts", "carts-db"]
+        port = "carts_db_port"
+      }
+
+      resources {
+        cpu = 100 # 100 Mhz
+        memory = 128 # 128MB
+        network {
+          port "carts_db_port" {
+            static = 27018
+          }
+        }
+      }
+    } # - end db - #
+  } # - end carts-db - #
+
   # - orders - #
   group "orders" {
     count = 1
@@ -325,6 +383,46 @@ job "sockshop" {
       }
     } # - end db - #
   } # - end orders - #
+
+ # - orders-db - #
+  group "orders-db" {
+    count = 1
+
+    restart {
+      attempts = 10
+      interval = "5m"
+      delay = "25s"
+      mode = "delay"
+    }
+
+    # - db - #
+    task "ordersdb" {
+      driver = "docker"
+
+      config {
+        image = "mongo:3.4.3"
+        port_map = {
+          orders_db_port = 27017
+        }
+      }
+
+      service {
+        name = "orders-db"
+        tags = ["db", "orders", "orders-db"]
+        port = "orders_db_port"
+      }
+
+      resources {
+        cpu = 100 # 100 Mhz
+        memory = 64 # 64MB
+        network {
+          port "orders_db_port" {
+            static = 27019
+          }
+        }
+      }
+    } # - end db - #
+  } # - end orders-db - #
 
   # - payment - #
   group "payment" {
