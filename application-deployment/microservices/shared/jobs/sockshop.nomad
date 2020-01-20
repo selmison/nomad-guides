@@ -42,7 +42,7 @@ job "sockshop" {
 
       env {
 	      HATEAOS = "user.service.consul"
-        MONGO_HOST = "user-db.service.consul:27017"
+        MONGO_HOST = "localhost:27017"
       }
 
       config {
@@ -266,8 +266,9 @@ job "sockshop" {
       driver = "docker"
 
       env {
-        db = "orders-db.service.consul"
+        db = "localhost"
 	      domain = "service.consul"
+        MONGO_ENDPOINT = "mongodb://localhost:27017/data"
       }
 
       config {
